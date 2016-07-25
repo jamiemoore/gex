@@ -1,5 +1,10 @@
 sudo: required
 
+language: generic
+
+addons:
+    artifacts: true
+
 services:
     - docker
 
