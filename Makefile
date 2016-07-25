@@ -36,7 +36,7 @@ build: lint
 lint: docker-build
 	@echo ""
 	@echo "################################################################################"                                                                                         
-	@echo "# linting..."
+	@echo "# formatting and linting..."
 	@echo "################################################################################"                                                                                         
 	@echo "" 
 	@docker run --rm -v $(SRC):$(DOCKER_BUILD_CONTAINER_DIR) $(DOCKER_BUILD_IMAGE) $(DOCKER_BUILD_CONTAINER_DIR)/build/lint.sh  
