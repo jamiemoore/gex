@@ -10,7 +10,7 @@ DOCKER_BUILD_CONTAINER_DIR := /go/src/github.com/jamiemoore/gex
 DOCKER_RUN_DIR := $(SRC)/bin
 DOCKER_RUN_IMAGE := jamie/gex
 
-LATEST_GIT_TAG := $(shell git describe --tags)
+LATEST_GIT_TAG := $(shell git describe)
 
 .PHONY: all
 all: lint build unittest test run

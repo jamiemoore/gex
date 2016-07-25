@@ -4,16 +4,9 @@ This is a Golang "Hello World" example project.
 ## Installation
 You can install Gex using the following methods.
 
-### Local Installation into /usr/local/bin
-  * Build and install gex with ```make install```  
-  * Set an environment variable to match your current environment (or any arbitory text) ``` export GEXENV=prod```
-  * Run gex ```./gex```
-
 ### Run using the default docker daemon
-  * Build, Test and Run using docker with ```make```
-
-### Run from Supervisord (Recommended for long lived installs)
-Any process monitoring software could be used, this is just an example using Supervisord
+  * Set an environment variable to match your current environment (or any arbitrary text) ``` export GEXENV=dev```
+  * Lint, Build, test and Run using docker with command: ```make```
 
 ## Usage
 Now that Gex is running and your environment variable is set. You will be able to see the following output from curl
@@ -21,34 +14,70 @@ Now that Gex is running and your environment variable is set. You will be able t
   * See the current Gex webpage.
 
     ```
-    curl yourhost
+    curl localhost:8080
     ```
 
-  * Request from the API
+  * Using the API
 
     ```
-    curl yourhost/api/get/web_message
+    curl -s localhost:8080/api/message | jq -r '.message'
     ```
 
-## Build Requirements
+## Building
+
+### Requirements
 An environment variable needs to be provided for the
 
   * Docker
   * Make
-  * environment variable ``` export GEXENV=prod```
+  * environment variable ``` export GEXENV=dev```
 
 Note that Golang is not required as building and unit tests are run from within a docker image.
 
-## Build
-Build using the following commands
+### Build
+Note that you do not have to have golang installed on your system as the binary is built using a docker container.  Build using the following commands
 
 ```
 make build
 ```
 
-## Test (Functional)
+### Test (Functional)
 Test using the following commands
 
 ```
 make test
 ```
+### Upload to the docker repository
+* add a new annotated git tag using [semver](http://semver.org/) ```git tag -a -m "description" v[major].[minor].[patch]``` if you have not done so already
+* upload to your docker repository ```make upload```
+
+### List of make commands
+  * ```make``` - lint, build, unittest, test and run
+  * ```make lint``` - format and lint the code
+  * ```make build``` - compile the go code in it's own docker container
+  * ```make unittest``` - run the unit tests
+  * ```make run``` - runs Gex in the runtime docker container.
+  * ```make integrationtest``` - runs the integration tests
+  * ```make uitest``` - runs the ui tests
+  * ```make test``` - runs the integrationtest and uitest
+  * ```make upload``` - upload the latest docker runtime to the docker registry
+  * ```make docker-build``` - create the docker image used for Building
+  * ```make docker-runtime``` - create the docker runtime image used for running Gex
+
+
+## Deployment
+Please note that there is no latest version to run a specific version must be selected.
+
+### Requirements
+  * System with the docker daemon running
+  * Access to the docker repository (docker hub)
+  * Upload your docker image as per the process above
+
+### Installation
+  * on the virtual machine which is currently running docker run the following command, selecting the correct version.
+
+  ```
+  docker rm --force gex ; docker run -d --restart=always -p 8080:8080 -e GEXENV=prod --name gex jamie/gex:v[major].[minor].[patch]
+  ```
+
+I would suggest running under a clustering technology, such as kubernetes  Installation would vary in this case, depending upon the technology chosen.
