@@ -5,7 +5,7 @@ MAINTAINER Jamie Moore <jbgmoore@gmail.com>
 
 RUN yum update -y; yum clean all
 
-ADD gex /usr/local/bin/
+ADD bin/gex /usr/local/bin/
 
 EXPOSE 8080
 

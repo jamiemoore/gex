@@ -7,7 +7,6 @@ DOCKER_BUILD_IMAGE := jamie/gex_build
 DOCKER_BUILD_DIR := $(SRC)/build
 DOCKER_BUILD_CONTAINER_DIR := /go/src/github.com/jamiemoore/gex
 
-DOCKER_RUN_DIR := $(SRC)/bin
 DOCKER_RUN_IMAGE := jamie/gex
 
 LATEST_GIT_TAG := $(shell git describe)
@@ -100,7 +99,7 @@ docker-build:
 	@echo "# building docker build image..."
 	@echo "################################################################################"                                                                                         
 	@echo "" 
-	@docker build $(DOCKER_BUILD_ARGS) -t $(DOCKER_BUILD_IMAGE) $(DOCKER_BUILD_DIR)
+	@docker build -t $(DOCKER_BUILD_IMAGE) $(DOCKER_BUILD_DIR)
 
 .PHONY: docker-runtime
 docker-runtime: 
@@ -109,6 +108,6 @@ docker-runtime:
 	@echo "# building docker runtime image..."
 	@echo "################################################################################"                                                                                         
 	@echo "" 
-	@docker build $(DOCKER_RUN_ARGS) -t $(DOCKER_RUN_IMAGE) $(DOCKER_RUN_DIR)
+	@docker build -t $(DOCKER_RUN_IMAGE) $(SRC)
 	@docker tag $(DOCKER_RUN_IMAGE) $(DOCKER_RUN_IMAGE):$(LATEST_GIT_TAG)
 
