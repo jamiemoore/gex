@@ -9,7 +9,9 @@ DOCKER_BUILD_CONTAINER_DIR := /go/src/github.com/jamiemoore/gex
 
 DOCKER_RUN_IMAGE := jamie/gex
 
-LATEST_GIT_TAG := $(shell git describe)
+VERSION := $(shell git describe)
+LAST_GIT_TAG := $(shell git describe --abbrev=0)
+PREVIOUS_GIT_TAG := $(shell git describe --abbrev=0 $(LAST_GIT_TAG)^)
 
 .PHONY: all
 all: lint build unittest test run
@@ -96,7 +98,7 @@ upload: test
 # Login if required
 	@if [ ! -e ~/.docker/config.json ]; then docker login -e $(DOCKER_EMAIL) -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD); fi;
 #We only upload when the release is tagged
-	@git describe --exact-match HEAD >/dev/null 2>&1 ; if [ $$? -eq 0 ] ; then docker push $(DOCKER_RUN_IMAGE):$(LATEST_GIT_TAG) ; else echo "Release is not tagged, not uploading"; fi
+	@git describe --exact-match HEAD >/dev/null 2>&1 ; if [ $$? -eq 0 ] ; then docker push $(DOCKER_RUN_IMAGE):$(VERSION) ; else echo "Release is not tagged, not uploading"; fi
 
 .PHONY: docker-build
 docker-build: 
@@ -115,14 +117,28 @@ docker-runtime:
 	@echo "################################################################################"                                                                                         
 	@echo "" 
 	@docker build -t $(DOCKER_RUN_IMAGE) $(SRC)
-	@docker tag $(DOCKER_RUN_IMAGE) $(DOCKER_RUN_IMAGE):$(LATEST_GIT_TAG)
+	@docker tag $(DOCKER_RUN_IMAGE) $(DOCKER_RUN_IMAGE):$(VERSION)
 
 .PHONY: deploy-sloppy
 deploy-sloppy:
 	@echo ""                                                                                                                                                                         
 	@echo "################################################################################"                                                                                         
-	@echo "# deploying $(LATEST_GIT_TAG) to sloppy.io" 
+	@echo "# deploying $(LAST_GIT_TAG) on to sloppy.io" 
 	@echo "################################################################################"                                                                                         
 	@echo "" 
-	curl -vvv -H "Content-Type: application/json" -H "Authorization: Bearer $(SLOPPY_APITOKEN)" -X PATCH -d '{"image": "'$(DOCKER_RUN_IMAGE)':'$(LATEST_GIT_TAG)'"}'  https://api.sloppy.io/v1/apps/gex/services/gex/apps/gex
+	curl -vvv -H "Content-Type: application/json" -H "Authorization: Bearer $(SLOPPY_APITOKEN)" -X PATCH -d '{"image": "'$(DOCKER_RUN_IMAGE)':'$(LAST_GIT_TAG)'"}'  https://api.sloppy.io/v1/apps/gex/services/gex/apps/gex
+
+.PHONY: rollback-sloppy
+rollback-sloppy:
+	@echo ""                                                                                                                                                                         
+	@echo "################################################################################"                                                                                         
+	@echo "# rolling back to $(PREVIOUS_GIT_TAG) on sloppy.io" 
+	@echo "################################################################################"                                                                                         
+	@echo "" 
+	curl -vvv -H "Content-Type: application/json" -H "Authorization: Bearer $(SLOPPY_APITOKEN)" -X PATCH -d '{"image": "'$(DOCKER_RUN_IMAGE)':'$(PREVIOUS_GIT_TAG)'"}'  https://api.sloppy.io/v1/apps/gex/services/gex/apps/gex
+
+
+
+
+
 
