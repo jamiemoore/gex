@@ -14,14 +14,15 @@ LATEST_GIT_TAG := $(shell git describe)
 .PHONY: all
 all: lint build unittest test run
 
-.PHONY: upload
-upload: test
+.PHONY: lint
+lint: docker-build
 	@echo ""
 	@echo "################################################################################"                                                                                         
-	@echo "# uploading to registry..."
+	@echo "# formatting and linting..."
 	@echo "################################################################################"                                                                                         
 	@echo "" 
-	@docker push $(DOCKER_RUN_IMAGE):$(LATEST_GIT_TAG)  
+	@docker run --rm -v $(SRC):$(DOCKER_BUILD_CONTAINER_DIR) $(DOCKER_BUILD_IMAGE) $(DOCKER_BUILD_CONTAINER_DIR)/build/lint.sh  
+
 
 .PHONY: build
 build: lint
@@ -32,16 +33,7 @@ build: lint
 	@echo "" 
 	@if [ -e bin/gex ]; then echo "deleting existing artifact"; rm bin/gex; fi;
 	@docker run --rm -v $(SRC):$(DOCKER_BUILD_CONTAINER_DIR) $(DOCKER_BUILD_IMAGE) $(DOCKER_BUILD_CONTAINER_DIR)/build/build.sh
-	@if [ -e bin/gex ]; then echo "build successful!"; fi;
-
-.PHONY: lint
-lint: docker-build
-	@echo ""
-	@echo "################################################################################"                                                                                         
-	@echo "# formatting and linting..."
-	@echo "################################################################################"                                                                                         
-	@echo "" 
-	@docker run --rm -v $(SRC):$(DOCKER_BUILD_CONTAINER_DIR) $(DOCKER_BUILD_IMAGE) $(DOCKER_BUILD_CONTAINER_DIR)/build/lint.sh  
+	@if [ -e bin/gex ]; then echo "build successful!"; else echo "BUILD FAILED!"; exit 1; fi;
 
 .PHONY: unittest 
 unittest: build
@@ -53,7 +45,7 @@ unittest: build
 	@docker run --rm -v $(SRC):$(DOCKER_BUILD_CONTAINER_DIR) $(DOCKER_BUILD_IMAGE) $(DOCKER_BUILD_CONTAINER_DIR)/build/unittest.sh  
 
 .PHONY: test 
-test: build integrationtest uitest
+test: unittest integrationtest uitest
 
 .PHONY: integrationtest 
 integrationtest: docker-runtime 
@@ -93,6 +85,15 @@ check-env:
 ifndef GEXENV
 	$(error GEXENV is undefined)
 endif
+
+.PHONY: upload
+upload: test
+	@echo ""
+	@echo "################################################################################"                                                                                         
+	@echo "# uploading to registry..."
+	@echo "################################################################################"                                                                                         
+	@echo "" 
+	@docker push $(DOCKER_RUN_IMAGE):$(LATEST_GIT_TAG)  
 
 .PHONY: docker-build
 docker-build: 
