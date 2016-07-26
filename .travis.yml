@@ -5,7 +5,7 @@ language: generic
 addons:
     artifacts: 
        paths:
-         - /bin/gex
+         - bin/gex
 
 services:
     - docker

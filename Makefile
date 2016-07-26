@@ -30,9 +30,9 @@ build: lint
 	@echo "# building..."
 	@echo "################################################################################"                                                                                         
 	@echo "" 
-	@if [ -a bin/gex ]; then echo "deleting existing artifact"; rm bin/gex; fi;
+	@if [ -e bin/gex ]; then echo "deleting existing artifact"; rm bin/gex; fi;
 	@docker run --rm -v $(SRC):$(DOCKER_BUILD_CONTAINER_DIR) $(DOCKER_BUILD_IMAGE) $(DOCKER_BUILD_CONTAINER_DIR)/build/build.sh
-	@if [ -a bin/gex ]; then echo "build successful!"; fi;
+	@if [ -e bin/gex ]; then echo "build successful!"; fi;
 
 .PHONY: lint
 lint: docker-build
