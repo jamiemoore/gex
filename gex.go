@@ -26,7 +26,8 @@ import (
 	"strconv"
 )
 
-var gexEnv string
+var gexEnv = "unknown"
+var version = "unknown"
 
 type message struct {
 	Message string `json:"message"`
@@ -48,14 +49,26 @@ func getGexEnv() (environment string) {
 	if environment == "" {
 		environment = "unknown"
 	}
+
 	return environment
 
 }
 
 func getMessage(environment string) (m string) {
 
-	m = fmt.Sprintf("Hello from %s!", environment)
+	m = fmt.Sprintf("Hello from %s! - version %s", environment, getVersion())
 	return m
+}
+
+func getVersion() (ver string) {
+
+	if version == "" {
+		ver = "unknown"
+	} else {
+		ver = version
+	}
+
+	return ver
 }
 
 func main() {

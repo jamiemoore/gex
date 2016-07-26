@@ -43,10 +43,10 @@ func TestGetMessage(t *testing.T) {
 		n        string // input
 		expected string // expected result
 	}{
-		{"dev", "Hello from dev!"},
-		{"test", "Hello from test!"},
-		{"prod", "Hello from prod!"},
-		{"unknown", "Hello from unknown!"},
+		{"dev", "Hello from dev! - version unknown"},
+		{"test", "Hello from test! - version unknown"},
+		{"prod", "Hello from prod! - version unknown"},
+		{"unknown", "Hello from unknown! - version unknown"},
 	}
 
 	for _, tt := range messageTests {

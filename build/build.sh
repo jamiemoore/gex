@@ -5,7 +5,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+VERSION=$(git describe)
 
-#go get
-go install
+go install  -ldflags "-X main.version=$VERSION"
 cp -p /go/bin/gex /go/src/github.com/jamiemoore/gex/bin/
