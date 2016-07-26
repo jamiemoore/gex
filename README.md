@@ -1,5 +1,6 @@
-# Gex - Go Example Project [![Release](https://img.shields.io/github/release/jamiemoore/gex.svg)](https://github.com/jamiemoore/gex/releases/latest)
-[![Build Status]((https://travis-ci.org/jamiemoore/gex.svg?branch=master)](https://travis-ci.org/jamiemoore/gex)
+# Gex - Go Example Project 
+[![Build Status](https://travis-ci.org/jamiemoore/gex.svg?branch=master)](https://travis-ci.org/jamiemoore/gex)
+
 This is a Golang "Hello World" example project.
 
 ## Installation
