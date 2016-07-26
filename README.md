@@ -1,4 +1,4 @@
-# Gex - Go Example Project 
+# Gex - Go Example Project
 [![Build Status](https://travis-ci.org/jamiemoore/gex.svg?branch=master)](https://travis-ci.org/jamiemoore/gex)
 
 This is a Golang "Hello World" example project.
@@ -51,6 +51,12 @@ make test
 ```
 ### Upload to the docker repository
 * add a new annotated git tag using [semver](http://semver.org/) ```git tag -a -m "description" v[major].[minor].[patch]``` if you have not done so already
+* Either use ```docker login``` or set the environment variables matching the docker hub account
+```
+export DOCKER_EMAIL=
+export DOCKER_USERNAME=
+export DOCKER_PASSWORD=
+```
 * upload to your docker repository ```make upload```
 
 ### List of make commands
