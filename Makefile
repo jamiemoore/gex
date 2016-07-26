@@ -117,3 +117,12 @@ docker-runtime:
 	@docker build -t $(DOCKER_RUN_IMAGE) $(SRC)
 	@docker tag $(DOCKER_RUN_IMAGE) $(DOCKER_RUN_IMAGE):$(LATEST_GIT_TAG)
 
+.PHONY: deploy-sloppy
+deploy-sloppy:
+	@echo ""                                                                                                                                                                         
+	@echo "################################################################################"                                                                                         
+	@echo "# deploying $(LATEST_GIT_TAG) to sloppy.io" 
+	@echo "################################################################################"                                                                                         
+	@echo "" 
+	curl -vvv -H "Content-Type: application/json" -H "Authorization: Bearer $(SLOPPY_APITOKEN)" -X PATCH -d '{"image": "'$(DOCKER_RUN_IMAGE)':'$(LATEST_GIT_TAG)'"}'  https://api.sloppy.io/v1/apps/gex/services/gex/apps/gex
+
