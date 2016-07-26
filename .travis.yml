@@ -10,7 +10,4 @@ addons:
 services:
     - docker
 
-before_install:
-    - make docker-build
-
-script: make build
+script: make test

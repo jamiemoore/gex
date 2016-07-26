@@ -30,7 +30,7 @@ build: lint
 	@echo "# building..."
 	@echo "################################################################################"                                                                                         
 	@echo "" 
-	if [ -a bin/gex ]; then echo "deleting existing artifact"; rm bin/gex; fi;
+	@if [ -a bin/gex ]; then echo "deleting existing artifact"; rm bin/gex; fi;
 	@docker run --rm -v $(SRC):$(DOCKER_BUILD_CONTAINER_DIR) $(DOCKER_BUILD_IMAGE) $(DOCKER_BUILD_CONTAINER_DIR)/build/build.sh
 	@if [ -a bin/gex ]; then echo "build successful!"; fi;
 
@@ -53,7 +53,7 @@ unittest: build
 	@docker run --rm -v $(SRC):$(DOCKER_BUILD_CONTAINER_DIR) $(DOCKER_BUILD_IMAGE) $(DOCKER_BUILD_CONTAINER_DIR)/build/unittest.sh  
 
 .PHONY: test 
-test: integrationtest uitest
+test: build integrationtest uitest
 
 .PHONY: integrationtest 
 integrationtest: docker-runtime 
