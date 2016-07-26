@@ -6,6 +6,8 @@ addons:
     artifacts: 
        paths:
          - bin/gex
+       target_paths:
+           - travis/builds
 
 services:
     - docker
