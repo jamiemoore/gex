@@ -90,12 +90,11 @@ endif
 upload: test
 	@echo ""
 	@echo "################################################################################"                                                                                         
-	@echo "# uploading to registry..."
+	@echo "# if release is tagged, uploading to registry..."
 	@echo "################################################################################"                                                                                         
 	@echo "" 
 	#We only upload when the release is tagged
-	@git describe --exact-match HEAD > /dev/null || (echo "Release is not tagged, not uploading"; exit 0)
-	@docker push $(DOCKER_RUN_IMAGE):$(LATEST_GIT_TAG)  
+	@git describe --exact-match HEAD >& /dev/null; if [ $$? -eq 0 ] ; then docker push $(DOCKER_RUN_IMAGE):$(LATEST_GIT_TAG) ; else echo "Release is not tagged, not uploading"; fi
 
 .PHONY: docker-build
 docker-build: 

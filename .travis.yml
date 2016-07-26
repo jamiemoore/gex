@@ -2,14 +2,7 @@ sudo: required
 
 language: generic
 
-addons:
-    artifacts: 
-       paths:
-         - bin/gex
-       target_paths:
-           - travis/builds
-
 services:
     - docker
 
-script: make test
+script: make upload
