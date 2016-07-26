@@ -6,3 +6,5 @@ services:
     - docker
 
 script: make upload
+
+deploy: make deploy-sloppy
