@@ -26,18 +26,20 @@ import (
 	"strconv"
 )
 
-var message string
+var gexEnv string
 
-type Message struct {
+type message struct {
 	Message string `json:"message"`
 }
 
+// Index Handler that returns the web root
 func Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, message)
+	fmt.Fprintf(w, getMessage(gexEnv))
 }
 
+// APImessage Handler that returns the message for the API
 func APImessage(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(Message{Message: message})
+	json.NewEncoder(w).Encode(message{Message: getMessage(gexEnv)})
 }
 
 func getGexEnv() (environment string) {
@@ -58,13 +60,12 @@ func getMessage(environment string) (m string) {
 
 func main() {
 
-	gexenv := getGexEnv()
-	message = getMessage(gexenv)
+	gexEnv = getGexEnv()
 
 	port := 8080
 
 	fmt.Println("Gex Running...")
-	fmt.Println("Environment:", gexenv)
+	fmt.Println("Environment:", gexEnv)
 	fmt.Println("Listening on port", port)
 
 	router := mux.NewRouter().StrictSlash(true)
