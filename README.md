@@ -19,11 +19,17 @@ Now that Gex is running and your environment variable is set. You will be able t
     curl localhost:8080
     ```
 
-  * Using the API
+  * Using the API to get the message
 
     ```
     curl -s localhost:8080/api/message | jq -r '.message'
     ```
+    * Using the API to get the version
+
+    ```
+    curl -s localhost:8080/api/version | jq -r '.version'
+    ```
+
 
 ## Building
 
@@ -71,6 +77,10 @@ export DOCKER_PASSWORD=
   * ```make upload``` - upload the latest docker runtime to the docker registry
   * ```make docker-build``` - create the docker image used for Building
   * ```make docker-runtime``` - create the docker runtime image used for running Gex
+  * ```make pipeline``` - run by the pipeline to upload, deploy and check
+  * ```make deploy-sloppy``` - deploy from docker hub to sloppy io
+  * ```make rollback-sloppy``` - rollback to the previous release
+  * ```make post-deploy-check-sloppy``` confirm the new version is available at http://gex.sloppy.zone
 
 
 ## Deployment

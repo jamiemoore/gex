@@ -35,7 +35,7 @@ endef
 all: lint build unittest test run
 
 .PHONY: pipeline-sloppy
-pipeline-sloppy: test deploy-sloppy post-deploy-check-sloppy
+pipeline-sloppy: upload deploy-sloppy post-deploy-check-sloppy
 
 .PHONY: lint
 lint: docker-build
