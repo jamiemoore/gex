@@ -5,6 +5,5 @@ language: generic
 services:
     - docker
 
-script: make upload
+script: make pipeline-sloppy
 
-after_success: make deploy-sloppy

@@ -13,8 +13,27 @@ VERSION := $(shell git describe)
 LAST_GIT_TAG := $(shell git describe --abbrev=0)
 PREVIOUS_GIT_TAG := $(shell git describe --abbrev=0 $(LAST_GIT_TAG)^)
 
+
+# Wait for sloppy deployment to be ready
+define sloppy_wait_for_ready 
+	@printf "Waiting for running state "
+	@while true ; do \
+			if [ `curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $(SLOPPY_APITOKEN)" https://api.sloppy.io/v1/apps/gex/services/gex/apps/gex | jq -r '.data.status | select(.[] | contains("running")) | length'` == "1" ]; \
+			then \
+				echo "ready"; \
+				break; \
+			else \
+				printf "."; \
+				sleep 1; \
+		fi ; \
+	done
+endef
+
 .PHONY: all
 all: lint build unittest test run
+
+.PHONY: pipeline-sloppy
+pipeline-sloppy: test deploy-sloppy post-deploy-check-sloppy
 
 .PHONY: lint
 lint: docker-build
@@ -129,6 +148,7 @@ ifndef SLOPPY_APITOKEN
 	$(error SLOPPY_APITOKEN is undefined)
 endif
 
+
 .PHONY: deploy-sloppy
 deploy-sloppy: check-sloppy-env
 	@echo ""
@@ -136,7 +156,9 @@ deploy-sloppy: check-sloppy-env
 	@echo "# deploying $(LAST_GIT_TAG) on to sloppy.io"
 	@echo "################################################################################"
 	@echo ""
+	$(call sloppy_wait_for_ready)
 	@curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $(SLOPPY_APITOKEN)" -X PATCH -d '{"image": "'$(DOCKER_RUN_IMAGE)':'$(LAST_GIT_TAG)'"}'  https://api.sloppy.io/v1/apps/gex/services/gex/apps/gex | jq -r '.status'
+	$(call sloppy_wait_for_ready)
 
 .PHONY: rollback-sloppy
 rollback-sloppy: check-sloppy-env
@@ -145,4 +167,16 @@ rollback-sloppy: check-sloppy-env
 	@echo "# rolling back to $(PREVIOUS_GIT_TAG) on sloppy.io"
 	@echo "################################################################################"
 	@echo ""
+	$(call sloppy_wait_for_ready)
 	@curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $(SLOPPY_APITOKEN)" -X PATCH -d '{"image": "'$(DOCKER_RUN_IMAGE)':'$(PREVIOUS_GIT_TAG)'"}'  https://api.sloppy.io/v1/apps/gex/services/gex/apps/gex | jq -r '.status'
+	$(call sloppy_wait_for_ready)
+
+.PHONY: post-deploy-check-sloppy
+post-deploy-check-sloppy: check-sloppy-env
+	@echo ""
+	@echo "################################################################################"
+	@echo "# post deployment check - sloppy deployment"
+	@echo "################################################################################"
+	@echo ""
+	@echo "TODO: implement post deployment check"
+
