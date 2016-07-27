@@ -1,5 +1,9 @@
 sudo: required
 
+branches:
+  except:
+    - /^v[0-9]/
+
 language: generic
 
 services:
