@@ -90,6 +90,7 @@ Please note that there is no latest version to run a specific version must be se
   * System with the docker daemon running
   * Access to the docker repository (docker hub)
   * Upload your docker image as per the process above
+  * When deploying to sloppy.io, jq is required.
 
 ### Installation
   * on the virtual machine which is currently running docker run the following command, selecting the correct version.

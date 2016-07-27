@@ -180,7 +180,7 @@ post-deploy-check-sloppy: check-sloppy-env
 	@echo "# post deployment check for $(LAST_GIT_TAG) - sloppy deployment"
 	@echo "################################################################################"
 	@echo ""
-	curl -k -vvv https://gex.sloppy.zone/api/version | jq -r '.version'
+#curl -k -vvv https://gex.sloppy.zone/api/version | jq -r '.version'
 	@if [ "`curl -k -s https://gex.sloppy.zone/api/version | jq -r '.version'`" == $(LAST_GIT_TAG) ]; then \
 		echo $(LAST_GIT_TAG) has been deployed; \
 	else \
