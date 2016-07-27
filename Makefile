@@ -20,7 +20,7 @@ PREVIOUS_GIT_TAG := $(shell git describe --abbrev=0 $(LAST_GIT_TAG)^)
 define sloppy_wait_for_ready 
 	@printf "Waiting for running state "
 	@while true ; do \
-			if [ `curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $(SLOPPY_APITOKEN)" https://api.sloppy.io/v1/apps/gex/services/gex/apps/gex | jq -r '.data.status | select(.[] | contains("running")) | length'` == "1" ]; \
+			if [ "`curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $(SLOPPY_APITOKEN)" https://api.sloppy.io/v1/apps/gex/services/gex/apps/gex | jq -r '.data.status | select(.[] | contains("running")) | length'`" == "1" ]; \
 			then \
 				echo "ready"; \
 				break; \
@@ -177,8 +177,12 @@ rollback-sloppy: check-sloppy-env
 post-deploy-check-sloppy: check-sloppy-env
 	@echo ""
 	@echo "################################################################################"
-	@echo "# post deployment check - sloppy deployment"
+	@echo "# post deployment check for $(LAST_GIT_TAG) - sloppy deployment"
 	@echo "################################################################################"
 	@echo ""
-	@echo "TODO: implement post deployment check"
-
+	@if [ "`curl -s https://gex.sloppy.zone/api/version | jq -r '.version'`" == $(LAST_GIT_TAG) ]; then \
+		echo $(LAST_GIT_TAG) has been deployed; \
+	else \
+		echo "Deployment check failed!" ; \
+		exit 1 ; \
+	fi
