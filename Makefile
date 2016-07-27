@@ -2,6 +2,8 @@
 # Makefile - Gex
 ###############################################################################
 
+SHELL := /bin/bash
+
 SRC := $(CURDIR)
 DOCKER_BUILD_IMAGE := jamie/gex_build
 DOCKER_BUILD_DIR := $(SRC)/build
