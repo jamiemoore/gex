@@ -7,5 +7,5 @@ IFS=$'\n\t'
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 VERSION=$(git describe)
 
-go install  -ldflags "-X main.version=$VERSION"
+go install  -ldflags "-X main.gexVer=$VERSION"
 cp -p /go/bin/gex /go/src/github.com/jamiemoore/gex/bin/

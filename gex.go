@@ -27,10 +27,14 @@ import (
 )
 
 var gexEnv = "unknown"
-var version = "unknown"
+var gexVer = "unknown"
 
 type message struct {
 	Message string `json:"message"`
+}
+
+type version struct {
+	Version string `json:"version"`
 }
 
 // Index Handler that returns the web root
@@ -41,6 +45,11 @@ func Index(w http.ResponseWriter, r *http.Request) {
 // APImessage Handler that returns the message for the API
 func APImessage(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(message{Message: getMessage(gexEnv)})
+}
+
+// APIversion Handler that returns the version for the API
+func APIversion(w http.ResponseWriter, r *http.Request) {
+	json.NewEncoder(w).Encode(version{Version: getVersion()})
 }
 
 func getGexEnv() (environment string) {
@@ -62,10 +71,10 @@ func getMessage(environment string) (m string) {
 
 func getVersion() (ver string) {
 
-	if version == "" {
+	if gexVer == "" {
 		ver = "unknown"
 	} else {
-		ver = version
+		ver = gexVer
 	}
 
 	return ver
@@ -84,5 +93,6 @@ func main() {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", Index)
 	router.HandleFunc("/api/message", APImessage)
+	router.HandleFunc("/api/version", APIversion)
 	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(port), router))
 }
