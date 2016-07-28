@@ -86,7 +86,7 @@ export DOCKER_PASSWORD=
 
 
 ## Deployment
-Please note that there is no latest version to run a specific version must be selected.
+Please note that there is no latest version of the docker image, to run the image a specific version must be selected.
 
 ### Requirements
   * System with the docker daemon running
