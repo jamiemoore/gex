@@ -32,7 +32,7 @@ func TestGetGexEnv(t *testing.T) {
 	actual := getGexEnv()
 
 	if actual != expected {
-		t.Errorf("GetGexEnv(%d): expected %d, actual %d", n, expected, actual)
+		t.Errorf("GetGexEnv(%s): expected %s, actual %s", n, expected, actual)
 	}
 
 }
@@ -54,7 +54,7 @@ func TestGetMessage(t *testing.T) {
 		actual := getMessage(tt.n)
 
 		if actual != tt.expected {
-			t.Errorf("GetGexEnv(%d): expected %d, actual %d", tt.n, tt.expected, actual)
+			t.Errorf("GetGexEnv(%s): expected %s, actual %s", tt.n, tt.expected, actual)
 		}
 
 	}

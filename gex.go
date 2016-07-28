@@ -19,15 +19,18 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
-var gexEnv = "unknown"
-var gexVer = "unknown"
+var (
+	gexEnv = "unknown"
+	gexVer = "unknown"
+)
 
 type message struct {
 	Message string `json:"message"`

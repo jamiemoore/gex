@@ -3,6 +3,8 @@
 
 This is a Golang "Hello World" example project.
 
+#### Demo - http://gex.jamie.so
+
 ## Installation
 You can install Gex using the following methods.
 
@@ -80,7 +82,7 @@ export DOCKER_PASSWORD=
   * ```make pipeline``` - run by the pipeline to upload, deploy and check
   * ```make deploy-sloppy``` - deploy from docker hub to sloppy io
   * ```make rollback-sloppy``` - rollback to the previous release
-  * ```make post-deploy-check-sloppy``` confirm the new version is available at http://gex.sloppy.zone
+  * ```make post-deploy-check-sloppy``` confirm the new version is available at http://gex.jamie.so
 
 
 ## Deployment

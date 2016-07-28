@@ -15,12 +15,15 @@ VERSION := $(shell git describe)
 LAST_GIT_TAG := $(shell git describe --abbrev=0)
 PREVIOUS_GIT_TAG := $(shell git describe --abbrev=0 $(LAST_GIT_TAG)^)
 
+INSTANCES = $(shell curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $(SLOPPY_APITOKEN)" https://api.sloppy.io/v1/apps/gex/services/gex/apps/gex | jq -r '.data.instances')
+
 
 # Wait for sloppy deployment to be ready
-define sloppy_wait_for_ready 
+define sloppy_wait_for_ready
+	@echo Running on $(INSTANCES) instances
 	@printf "Waiting for running state "
 	@while true ; do \
-			if [ "`curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $(SLOPPY_APITOKEN)" https://api.sloppy.io/v1/apps/gex/services/gex/apps/gex | jq -r '.data.status | select(.[] | contains("running")) | length'`" == "1" ]; \
+			if [ "`curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $(SLOPPY_APITOKEN)" https://api.sloppy.io/v1/apps/gex/services/gex/apps/gex | jq -r '.data.status | select(.[1] | contains("running")) | length'`" == "$(INSTANCES)" ]; \
 			then \
 				echo "ready"; \
 				break; \
@@ -181,7 +184,7 @@ post-deploy-check-sloppy: check-sloppy-env
 	@echo "################################################################################"
 	@echo ""
 #curl -k -vvv https://gex.sloppy.zone/api/version | jq -r '.version'
-	@if [ "`curl -k -s https://gex.sloppy.zone/api/version | jq -r '.version'`" == $(LAST_GIT_TAG) ]; then \
+	@if [ "`curl -k -s http://gex.jamie.so/api/version | jq -r '.version'`" == $(LAST_GIT_TAG) ]; then \
 		echo $(LAST_GIT_TAG) has been deployed; \
 	else \
 		echo "Deployment check failed!" ; \
